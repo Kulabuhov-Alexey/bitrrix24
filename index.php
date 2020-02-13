@@ -65,8 +65,8 @@ if (!empty($_POST)) {
     'FIELDS' => array(
       "UF_CRM_1581622954466" => $_POST['contactPerson'], //фио
       "POST" => $_POST['position'], //Должность
-      "PHONE" => array(0 => array("VALUE" => $_POST['phone'], "ID" => "2")), //Телефон
-      "EMAIL" => array("0" => array("VALUE" => $_POST['email'], "ID" => "4")) //емэйл
+      "PHONE" => array(0 => array("VALUE" => $_POST['phone'], "ID" => "28")), //Телефон
+      "EMAIL" => array("0" => array("VALUE" => $_POST['email'], "ID" => "32")) //емэйл
     )
   ));
 
