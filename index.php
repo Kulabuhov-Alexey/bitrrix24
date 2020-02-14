@@ -60,7 +60,6 @@ if (!empty($_POST['contactPerson'])) {
 
   // update contact data
   $fio = explode(" ",$_POST['contactPerson']);
-  print_r($fio);
   $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.contact.update.json';
   $queryData = http_build_query(array(
     "ID" => "2",
