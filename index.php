@@ -64,9 +64,9 @@ if (!empty($_POST)) {
   $queryData = http_build_query(array(
     "ID" => "2",
     'FIELDS' => array(
-      "NAME" => $fio[0], //ф
-      "SECOND_NAME" => $fio[1], //и
-      "LAST_NAME" => $fio[2], //о
+      // "NAME" => $fio[0], //и
+      "SECOND_NAME" => $fio[1], //о
+      "LAST_NAME" => $fio[2], //ф
       "POST" => $_POST['position'], //Должность
       "PHONE" => array(0 => array("VALUE" => $_POST['phone'], "ID" => $_POST['id_phone'])), //Телефон
       "EMAIL" => array("0" => array("VALUE" => $_POST['email'], "ID" => $_POST['id_email'])) //емэйл
@@ -135,7 +135,7 @@ $company_name = $result_company["result"]["TITLE"];
 $company_city = $result_company["result"]["UF_CRM_1581619509707"];
 $company_inn = $result_company["result"]["UF_CRM_1581620973525"];
 $deal_title = $result_deal["result"]["TITLE"];
-$contact_person = "{$result_contact['result']['SECOND_NAME']} {$result_contact['result']['SECOND_NAME']} {$result_contact['result']['LAST_NAME']}";
+$contact_person = "{$result_contact['result']['NAME']} {$result_contact['result']['SECOND_NAME']} {$result_contact['result']['LAST_NAME']}";
 $contact_position = $result_contact["result"]["POST"];
 $id_phone = $result_contact["result"]["PHONE"]["0"]["ID"];
 $contact_phone = $result_contact["result"]["PHONE"]["0"]["VALUE"];
