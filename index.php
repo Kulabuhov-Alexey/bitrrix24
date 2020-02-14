@@ -10,7 +10,7 @@
 </head>
 <?
 // update hooks
-if (!empty($_POST)) {
+if (!empty($_POST['contactPerson'])) {
   // update company data
   $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.update.json';
   $queryData = http_build_query(array(
