@@ -59,14 +59,17 @@ if (!empty($_POST)) {
   curl_close($curl);
 
   // update contact data
+  $fio = explode(" ",$_POST['contactPerson']);
   $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.contact.update.json';
   $queryData = http_build_query(array(
     "ID" => "2",
     'FIELDS' => array(
-      "UF_CRM_1581622954466" => $_POST['contactPerson'], //фио
+      "NAME" => $fio[0], //ф
+      "SECOND_NAME" => $fio[1], //и
+      "LAST_NAME" => $fio[2], //о
       "POST" => $_POST['position'], //Должность
-      "PHONE" => array(0 => array("VALUE" => $_POST['phone'], "ID" => "28")), //Телефон
-      "EMAIL" => array("0" => array("VALUE" => $_POST['email'], "ID" => "32")) //емэйл
+      "PHONE" => array(0 => array("VALUE" => $_POST['phone'], "ID" => $_POST['id_phone'])), //Телефон
+      "EMAIL" => array("0" => array("VALUE" => $_POST['email'], "ID" => $_POST['id_email'])) //емэйл
     )
   ));
 
@@ -132,9 +135,11 @@ $company_name = $result_company["result"]["TITLE"];
 $company_city = $result_company["result"]["UF_CRM_1581619509707"];
 $company_inn = $result_company["result"]["UF_CRM_1581620973525"];
 $deal_title = $result_deal["result"]["TITLE"];
-$contact_person = $result_contact["result"]["UF_CRM_1581622954466"];
+$contact_person = "{$result_contact['result']['NAME']} {$result_contact['result']['SECOND_NAME']} {$result_contact['result']['LAST_NAME']}";
 $contact_position = $result_contact["result"]["POST"];
+$id_phone = $result_contact["result"]["PHONE"]["0"]["ID"];
 $contact_phone = $result_contact["result"]["PHONE"]["0"]["VALUE"];
+$id_email = $result_contact["result"]["EMAIL"]["0"]["ID"];
 $contact_email = $result_contact["result"]["EMAIL"]["0"]["VALUE"];
 ?>
 
@@ -187,12 +192,14 @@ $contact_email = $result_contact["result"]["EMAIL"]["0"]["VALUE"];
         <div class="form-group row">
           <label for="phone" class="col-md-2 col-form-label">Телефон</label>
           <div class="col-sm-10">
+            <input type="hidden" class="form-control" id="phone" name="id_phone" value="<?= $id_phone; ?>">
             <input type="text" class="form-control" id="phone" name="phone" value="<?= $contact_phone; ?>">
           </div>
         </div>
         <div class="form-group row">
           <label for="email" class="col-md-2 col-form-label">E-mail</label>
           <div class="col-sm-10">
+            <input type="hidden" class="form-control" id="phone" name="id_email" value="<?= $id_email; ?>">
             <input type="text" class="form-control" id="email" name="email" value="<?= $contact_email; ?>">
           </div>
         </div>
