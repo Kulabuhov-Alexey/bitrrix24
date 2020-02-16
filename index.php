@@ -67,15 +67,8 @@ if (!empty($_POST['contactPerson'])) {
   $result = curl_exec($curl);
   curl_close($curl);
   // update city
-  $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.update.json';
-  $queryData = http_build_query(array(
-    "ID" => $_SESSION['company_ID'],
-    'FIELDS' => array(
-      "TITLE" => $_POST['companyName']
-//      "UF_CRM_1581619509707" => $_POST['city'], // город
-//      "UF_CRM_1581620973525" => $_POST['inn'] // ИНН
-    )
-  ));
+  $queryUrl_company = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.address.update.json';
+  $queryData = http_build_query(array("fields" => array("TYPE_ID" => "1","ENTITY_TYPE_ID" => "8","ENTITY_ID" => $_SESSION['company_ID'], "CITY"=>$_POST['city'] )));
 
   $curl = curl_init();
   curl_setopt_array($curl, array(
@@ -90,15 +83,8 @@ if (!empty($_POST['contactPerson'])) {
   $result = curl_exec($curl);
   curl_close($curl);
   // update inn
-  $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.update.json';
-  $queryData = http_build_query(array(
-    "ID" => $_SESSION['company_ID'],
-    'FIELDS' => array(
-      "TITLE" => $_POST['companyName']
-//      "UF_CRM_1581619509707" => $_POST['city'], // город
-//      "UF_CRM_1581620973525" => $_POST['inn'] // ИНН
-    )
-  ));
+  $queryUrl_requisite = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.requisite.update.json';
+  $queryData = http_build_query(array("id" => $_SESSION['inn_id'],"fields" => array("RQ_INN" => $_POST['inn'])));
 
   $curl = curl_init();
   curl_setopt_array($curl, array(
@@ -224,6 +210,7 @@ curl_close($curl_requisite);
 
 $result = json_decode($result_requisite, true);
 $company_inn = $result['result'][0]['RQ_INN'];
+$_SESSION['inn_id'] = $result['result'][0]['ID'];
 
 //read City----------
 $queryUrl_address = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.address.list.json';
