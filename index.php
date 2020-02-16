@@ -132,7 +132,7 @@ $result_company = curl_exec($curl_company);
 curl_close($curl_company);
 $result_company = json_decode($result_company, true);
 $company_name = $result_company["result"]["TITLE"];
-$company_city = $result_company["result"]["UF_CRM_1581619509707"];
+//$company_city = $result_company["result"]["UF_CRM_1581619509707"];
 //$company_inn = $result_company["result"]["UF_CRM_1581620973525"];
 //---------------
 // read contact------------
@@ -178,6 +178,29 @@ curl_close($curl_requisite);
 
 $result = json_decode($result_requisite, true);
 $company_inn = $result['result'][0]['RQ_INN'];
+
+//read City----------
+$queryUrl_address = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.address.list.json';
+$queryData = http_build_query(array("filter" => array("TYPE_ID" => "1","ENTITY_TYPE_ID" => "4","ENTITY_ID" => $_SESSION['company_ID'] )));
+
+$curl_address = curl_init();
+curl_setopt_array($curl_address, array(
+    CURLOPT_SSL_VERIFYPEER => 0,
+    CURLOPT_POST => 1,
+    CURLOPT_HEADER => 0,
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLOPT_URL => $queryUrl_address,
+    CURLOPT_POSTFIELDS => $queryData,
+));
+
+
+$result = curl_exec($curl_address);
+
+
+curl_close($curl_company);
+
+$result = json_decode($result_company, true);
+$company_city = $result['result'][1]['CITY'];
 ?>
 
 <body>
