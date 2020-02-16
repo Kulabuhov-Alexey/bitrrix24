@@ -10,7 +10,7 @@
 </head>
 <?
 
-$ID =preg_split ('(?!"ID":")\d+',$_POST['PLACEMENT_OPTIONS']);
+$ID =preg_split("(?!\"ID\":\")\d+",$_POST['PLACEMENT_OPTIONS']);
 echo $ID;
 
 // update hooks
