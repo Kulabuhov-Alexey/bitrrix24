@@ -162,7 +162,7 @@ $queryUrl_requisite = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/cr
 $queryData = http_build_query(array("filter" => array("ENTITY_ID" => $_SESSION['deal_ID'] )));
 
 $curl_requisite = curl_init();
-curl_setopt_array($curl_company, array(
+curl_setopt_array($curl_requisite, array(
     CURLOPT_SSL_VERIFYPEER => 0,
     CURLOPT_POST => 1,
     CURLOPT_HEADER => 0,
