@@ -10,11 +10,9 @@
 </head>
 <?
 
-$ID =preg_split('(?!"ID":")\d+',$_POST['PLACEMENT_OPTIONS']);
-var_dump($ID);
-preg_match('(?!"ID":")\d+', $_POST['PLACEMENT_OPTIONS'], $matches);
-print_r($matches);
-echo $_POST['PLACEMENT_OPTIONS'];
+$re = '/(?!"ID":")[[:digit:]]+/m';
+preg_match($re, $_POST['PLACEMENT_OPTIONS'], $matches);
+print($matches[0]);
 
 // update hooks
 if (!empty($_POST['contactPerson'])) {
