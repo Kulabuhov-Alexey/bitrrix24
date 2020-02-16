@@ -14,7 +14,8 @@ if (!empty($_POST['PLACEMENT_OPTIONS'])) {
 $re = '/(?!"ID":")[[:digit:]]+/m';
 preg_match($re, $_POST['PLACEMENT_OPTIONS'], $matches);
 $deal_ID = $matches[0];
-apc_store('deal_ID', $deal_ID);
+session_start();
+$_SESSION['deal_ID'] = $deal_ID;
 }
 // update hooks
 if (!empty($_POST['contactPerson'])) {
@@ -98,7 +99,7 @@ if (!empty($_POST['contactPerson'])) {
 //read hooks
 //read deal ----------------
 $queryUrl_deal = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.deal.get.json';
-$queryData = http_build_query(array("ID" => apc_fetch('deal_ID')));
+$queryData = http_build_query(array("ID" => $_SESSION['deal_ID']));
 $curl_deal = curl_init();
 curl_setopt_array($curl_deal, array(
   CURLOPT_SSL_VERIFYPEER => 0,
