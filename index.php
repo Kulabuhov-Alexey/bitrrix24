@@ -133,9 +133,9 @@ curl_close($curl_company);
 $result_company = json_decode($result_company, true);
 $company_name = $result_company["result"]["TITLE"];
 $company_city = $result_company["result"]["UF_CRM_1581619509707"];
-$company_inn = $result_company["result"]["UF_CRM_1581620973525"];
-
-
+//$company_inn = $result_company["result"]["UF_CRM_1581620973525"];
+//---------------
+// read contact------------
 $queryUrl_contact = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.contact.get.json';
 $queryData = http_build_query(array("ID" => $_SESSION['contact_ID']));
 $curl_contact = curl_init();
@@ -156,7 +156,28 @@ $deal_id_phone = $result_contact["result"]["PHONE"]["0"]["ID"];
 $contact_phone = $result_contact["result"]["PHONE"]["0"]["VALUE"];
 $deal_id_email = $result_contact["result"]["EMAIL"]["0"]["ID"];
 $contact_email = $result_contact["result"]["EMAIL"]["0"]["VALUE"];
+//-------------
+// read INN
+$queryUrl_company = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.requisite.list.json';
+$queryData = http_build_query(array("filter" => array("ENTITY_ID" => $_SESSION['deal_ID'] )));
 
+$curl_company = curl_init();
+curl_setopt_array($curl_company, array(
+    CURLOPT_SSL_VERIFYPEER => 0,
+    CURLOPT_POST => 1,
+    CURLOPT_HEADER => 0,
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLOPT_URL => $queryUrl_company,
+    CURLOPT_POSTFIELDS => $queryData,
+));
+
+
+$result_company = curl_exec($curl_company);
+
+curl_close($curl_company);
+
+$result_INN = json_decode($result_company, true);
+$company_inn = $result_INN[0]['RQ_INN']
 ?>
 
 <body>
