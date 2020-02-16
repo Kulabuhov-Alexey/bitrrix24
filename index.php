@@ -10,7 +10,8 @@
 </head>
 <?
 
-var_dump ($_POST['PLACEMENT_OPTIONS']);
+$ID =preg_split ('(?!"ID":")\d+',$_POST['PLACEMENT_OPTIONS']);
+echo $ID;
 
 // update hooks
 if (!empty($_POST['contactPerson'])) {
