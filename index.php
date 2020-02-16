@@ -19,7 +19,7 @@ $_SESSION['deal_ID'] = $deal_ID;
 }
 // update hooks
 
-
+print($_SESSION['deal_ID']);
 //read hooks
 //read deal ----------------
 $queryUrl_deal = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.deal.get.json';
