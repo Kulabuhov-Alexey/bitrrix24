@@ -14,11 +14,91 @@ if (!empty($_POST['PLACEMENT_OPTIONS'])) {
 $re = '/(?!"ID":")[[:digit:]]+/m';
 preg_match($re, $_POST['PLACEMENT_OPTIONS'], $matches);
 $deal_ID = $matches[0];
+apc_store('deal_ID', $deal_ID);
 }
+// update hooks
+if (!empty($_POST['contactPerson'])) {
+
+    // update deal data
+    $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.deal.update.json';
+    $queryData = http_build_query(array(
+      "ID" => $deal_ID,
+      'FIELDS' => array(
+        "TITLE" => $_POST['nameDeal'], //название сделки
+        "COMMENTS" => $_POST['comments'] //комментарий
+      )
+    ));
+
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+      CURLOPT_SSL_VERIFYPEER => 0,
+      CURLOPT_POST => 1,
+      CURLOPT_HEADER => 0,
+      CURLOPT_RETURNTRANSFER => 1,
+      CURLOPT_URL => $queryUrl,
+      CURLOPT_POSTFIELDS => $queryData,
+    ));
+
+    $result = curl_exec($curl);
+    curl_close($curl);
+
+  // update company data
+  $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.update.json';
+  $queryData = http_build_query(array(
+    "ID" => $company_ID,
+    'FIELDS' => array(
+      "TITLE" => $_POST['companyName'],
+      "UF_CRM_1581619509707" => $_POST['city'], // город
+      "UF_CRM_1581620973525" => $_POST['inn'] // ИНН
+    )
+  ));
+
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_SSL_VERIFYPEER => 0,
+    CURLOPT_POST => 1,
+    CURLOPT_HEADER => 0,
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLOPT_URL => $queryUrl,
+    CURLOPT_POSTFIELDS => $queryData,
+  ));
+
+  $result = curl_exec($curl);
+  curl_close($curl);
+
+  // update contact data
+  $fio = explode(" ",$_POST['contactPerson']);
+  $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.contact.update.json';
+  $queryData = http_build_query(array(
+    "ID" => $contact_ID,
+    'FIELDS' => array(
+      "NAME" => $fio[0], //и
+      "SECOND_NAME" => $fio[1], //о
+      "LAST_NAME" => $fio[2], //ф
+      "POST" => $_POST['position'], //Должность
+      "PHONE" => array(0 => array("VALUE" => $_POST['phone'], "ID" => $_POST['id_phone'])), //Телефон
+      "EMAIL" => array("0" => array("VALUE" => $_POST['email'], "ID" => $_POST['id_email'])) //емэйл
+    )
+  ));
+
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_SSL_VERIFYPEER => 0,
+    CURLOPT_POST => 1,
+    CURLOPT_HEADER => 0,
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLOPT_URL => $queryUrl,
+    CURLOPT_POSTFIELDS => $queryData,
+  ));
+
+  $result = curl_exec($curl);
+  curl_close($curl);
+}
+
 //read hooks
 //read deal ----------------
 $queryUrl_deal = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.deal.get.json';
-$queryData = http_build_query(array("ID" => $deal_ID));
+$queryData = http_build_query(array("ID" => apc_fetch('deal_ID')));
 $curl_deal = curl_init();
 curl_setopt_array($curl_deal, array(
   CURLOPT_SSL_VERIFYPEER => 0,
@@ -76,84 +156,6 @@ $contact_phone = $result_contact["result"]["PHONE"]["0"]["VALUE"];
 $deal_id_email = $result_contact["result"]["EMAIL"]["0"]["ID"];
 $contact_email = $result_contact["result"]["EMAIL"]["0"]["VALUE"];
 
-// update hooks
-if (!empty($_POST['contactPerson'])) {
-
-  // update deal data
-  $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.deal.update.json';
-  $queryData = http_build_query(array(
-    "ID" => $deal_ID,
-    'FIELDS' => array(
-      "TITLE" => $_POST['nameDeal'], //название сделки
-      "COMMENTS" => $_POST['comments'] //комментарий
-    )
-  ));
-
-  $curl = curl_init();
-  curl_setopt_array($curl, array(
-    CURLOPT_SSL_VERIFYPEER => 0,
-    CURLOPT_POST => 1,
-    CURLOPT_HEADER => 0,
-    CURLOPT_RETURNTRANSFER => 1,
-    CURLOPT_URL => $queryUrl,
-    CURLOPT_POSTFIELDS => $queryData,
-  ));
-
-  $result = curl_exec($curl);
-  curl_close($curl);
-
-// update company data
-$queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.update.json';
-$queryData = http_build_query(array(
-  "ID" => $company_ID,
-  'FIELDS' => array(
-    "TITLE" => $_POST['companyName'],
-    "UF_CRM_1581619509707" => $_POST['city'], // город
-    "UF_CRM_1581620973525" => $_POST['inn'] // ИНН
-  )
-));
-
-$curl = curl_init();
-curl_setopt_array($curl, array(
-  CURLOPT_SSL_VERIFYPEER => 0,
-  CURLOPT_POST => 1,
-  CURLOPT_HEADER => 0,
-  CURLOPT_RETURNTRANSFER => 1,
-  CURLOPT_URL => $queryUrl,
-  CURLOPT_POSTFIELDS => $queryData,
-));
-
-$result = curl_exec($curl);
-curl_close($curl);
-
-// update contact data
-$fio = explode(" ",$_POST['contactPerson']);
-$queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.contact.update.json';
-$queryData = http_build_query(array(
-  "ID" => $contact_ID,
-  'FIELDS' => array(
-    "NAME" => $fio[0], //и
-    "SECOND_NAME" => $fio[1], //о
-    "LAST_NAME" => $fio[2], //ф
-    "POST" => $_POST['position'], //Должность
-    "PHONE" => array(0 => array("VALUE" => $_POST['phone'], "ID" => $_POST['id_phone'])), //Телефон
-    "EMAIL" => array("0" => array("VALUE" => $_POST['email'], "ID" => $_POST['id_email'])) //емэйл
-  )
-));
-
-$curl = curl_init();
-curl_setopt_array($curl, array(
-  CURLOPT_SSL_VERIFYPEER => 0,
-  CURLOPT_POST => 1,
-  CURLOPT_HEADER => 0,
-  CURLOPT_RETURNTRANSFER => 1,
-  CURLOPT_URL => $queryUrl,
-  CURLOPT_POSTFIELDS => $queryData,
-));
-
-$result = curl_exec($curl);
-curl_close($curl);
-}
 ?>
 
 <body>
