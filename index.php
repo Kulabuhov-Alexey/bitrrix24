@@ -194,12 +194,12 @@ curl_setopt_array($curl_address, array(
 ));
 
 
-$result = curl_exec($curl_address);
+$result_address = curl_exec($curl_address);
 
 
 curl_close($curl_company);
 
-$result = json_decode($result_company, true);
+$result = json_decode($result_address, true);
 $company_city = $result['result'][1]['CITY'];
 ?>
 
