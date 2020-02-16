@@ -48,9 +48,55 @@ if (!empty($_POST['contactPerson'])) {
   $queryData = http_build_query(array(
     "ID" => $_SESSION['company_ID'],
     'FIELDS' => array(
-      "TITLE" => $_POST['companyName'],
-      "UF_CRM_1581619509707" => $_POST['city'], // город
-      "UF_CRM_1581620973525" => $_POST['inn'] // ИНН
+      "TITLE" => $_POST['companyName']
+//      "UF_CRM_1581619509707" => $_POST['city'], // город
+//      "UF_CRM_1581620973525" => $_POST['inn'] // ИНН
+    )
+  ));
+
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_SSL_VERIFYPEER => 0,
+    CURLOPT_POST => 1,
+    CURLOPT_HEADER => 0,
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLOPT_URL => $queryUrl,
+    CURLOPT_POSTFIELDS => $queryData,
+  ));
+
+  $result = curl_exec($curl);
+  curl_close($curl);
+  // update city
+  $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.update.json';
+  $queryData = http_build_query(array(
+    "ID" => $_SESSION['company_ID'],
+    'FIELDS' => array(
+      "TITLE" => $_POST['companyName']
+//      "UF_CRM_1581619509707" => $_POST['city'], // город
+//      "UF_CRM_1581620973525" => $_POST['inn'] // ИНН
+    )
+  ));
+
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_SSL_VERIFYPEER => 0,
+    CURLOPT_POST => 1,
+    CURLOPT_HEADER => 0,
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLOPT_URL => $queryUrl,
+    CURLOPT_POSTFIELDS => $queryData,
+  ));
+
+  $result = curl_exec($curl);
+  curl_close($curl);
+  // update inn
+  $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.update.json';
+  $queryData = http_build_query(array(
+    "ID" => $_SESSION['company_ID'],
+    'FIELDS' => array(
+      "TITLE" => $_POST['companyName']
+//      "UF_CRM_1581619509707" => $_POST['city'], // город
+//      "UF_CRM_1581620973525" => $_POST['inn'] // ИНН
     )
   ));
 
@@ -181,7 +227,7 @@ $company_inn = $result['result'][0]['RQ_INN'];
 
 //read City----------
 $queryUrl_address = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.address.list.json';
-$queryData = http_build_query(array("filter" => array("TYPE_ID" => "1","ENTITY_TYPE_ID" => "4","ENTITY_ID" => $_SESSION['company_ID'] )));
+$queryData = http_build_query(array("filter" => array("TYPE_ID" => "1","ENTITY_TYPE_ID" => "8","ENTITY_ID" => $_SESSION['company_ID'] )));
 
 $curl_address = curl_init();
 curl_setopt_array($curl_address, array(
@@ -200,7 +246,7 @@ $result_address = curl_exec($curl_address);
 curl_close($curl_company);
 
 $result = json_decode($result_address, true);
-$company_city = $result['result'][1]['CITY'];
+$company_city = $result['result'][0]['CITY'];
 ?>
 
 <body>
