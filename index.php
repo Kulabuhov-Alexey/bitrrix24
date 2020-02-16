@@ -9,6 +9,11 @@
   <title>TestTask</title>
 </head>
 <?
+
+print_r($_POST);
+echo "<br>____---____<br>";
+print_r($_GET);
+
 // update hooks
 if (!empty($_POST['contactPerson'])) {
   // update company data
