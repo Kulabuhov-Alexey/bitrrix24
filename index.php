@@ -23,7 +23,7 @@ if (!empty($_POST['contactPerson'])) {
     // update deal data
     $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.deal.update.json';
     $queryData = http_build_query(array(
-      "ID" => $deal_ID,
+      "ID" => $_SESSION['deal_ID'],
       'FIELDS' => array(
         "TITLE" => $_POST['nameDeal'], //название сделки
         "COMMENTS" => $_POST['comments'] //комментарий
@@ -46,7 +46,7 @@ if (!empty($_POST['contactPerson'])) {
   // update company data
   $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.update.json';
   $queryData = http_build_query(array(
-    "ID" => $company_ID,
+    "ID" => $_SESSION['company_ID'],
     'FIELDS' => array(
       "TITLE" => $_POST['companyName'],
       "UF_CRM_1581619509707" => $_POST['city'], // город
@@ -71,7 +71,7 @@ if (!empty($_POST['contactPerson'])) {
   $fio = explode(" ",$_POST['contactPerson']);
   $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.contact.update.json';
   $queryData = http_build_query(array(
-    "ID" => $contact_ID,
+    "ID" => $_SESSION['contact_ID'],
     'FIELDS' => array(
       "NAME" => $fio[0], //и
       "SECOND_NAME" => $fio[1], //о
@@ -113,12 +113,12 @@ $result_deal = curl_exec($curl_deal);
 curl_close($curl_deal);
 $result_deal = json_decode($result_deal, true);
 $deal_title = $result_deal["result"]["TITLE"];
-$company_ID = $result_deal["result"]["COMPANY_ID"];
-$contact_ID = $result_deal["result"]["CONTACT_ID"];
+$_SESSION['company_ID'] = $result_deal["result"]["COMPANY_ID"];
+$_SESSION['contact_ID'] = $result_deal["result"]["CONTACT_ID"];
 //--------------------------------
 //read company ----------------
 $queryUrl_company = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.get.json';
-$queryData = http_build_query(array("ID" => $company_ID));
+$queryData = http_build_query(array("ID" => $_SESSION['company_ID']));
 $curl_company = curl_init();
 curl_setopt_array($curl_company, array(
   CURLOPT_SSL_VERIFYPEER => 0,
@@ -137,7 +137,7 @@ $company_inn = $result_company["result"]["UF_CRM_1581620973525"];
 
 
 $queryUrl_contact = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.contact.get.json';
-$queryData = http_build_query(array("ID" => $contact_ID));
+$queryData = http_build_query(array("ID" => $_SESSION['contact_ID']));
 $curl_contact = curl_init();
 curl_setopt_array($curl_contact, array(
   CURLOPT_SSL_VERIFYPEER => 0,
