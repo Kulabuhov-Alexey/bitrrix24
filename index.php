@@ -13,14 +13,14 @@
 if (!empty($_POST['PLACEMENT_OPTIONS'])) {
 $re = '/(?!"ID":")[[:digit:]]+/m';
 preg_match($re, $_POST['PLACEMENT_OPTIONS'], $matches);
-$ID = $matches[0];
+$deal_ID = $matches[0];
 }
 // update hooks
 if (!empty($_POST['contactPerson'])) {
   // update company data
   $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.update.json';
   $queryData = http_build_query(array(
-    "ID" => $ID,
+    "ID" => $deal_ID,
     'FIELDS' => array(
       "TITLE" => $_POST['companyName'],
       "UF_CRM_1581619509707" => $_POST['city'], // город
@@ -44,7 +44,7 @@ if (!empty($_POST['contactPerson'])) {
   // update deal data
   $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.deal.update.json';
   $queryData = http_build_query(array(
-    "ID" => $ID,
+    "ID" => $deal_ID,
     'FIELDS' => array(
       "TITLE" => $_POST['nameDeal'], //название сделки
       "COMMENTS" => $_POST['comments'] //комментарий
@@ -68,7 +68,7 @@ if (!empty($_POST['contactPerson'])) {
   $fio = explode(" ",$_POST['contactPerson']);
   $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.contact.update.json';
   $queryData = http_build_query(array(
-    "ID" => $ID,
+    "ID" => $deal_ID,
     'FIELDS' => array(
       "NAME" => $fio[0], //и
       "SECOND_NAME" => $fio[1], //о
@@ -95,20 +95,9 @@ if (!empty($_POST['contactPerson'])) {
 ?>
 <?
 //read hooks
-$queryUrl_company = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.get.json';
+//read deal ----------------
 $queryUrl_deal = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.deal.get.json';
-$queryUrl_contact = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.contact.get.json';
-$queryData = http_build_query(array("ID" => $ID));
-
-$curl_company = curl_init();
-curl_setopt_array($curl_company, array(
-  CURLOPT_SSL_VERIFYPEER => 0,
-  CURLOPT_POST => 1,
-  CURLOPT_HEADER => 0,
-  CURLOPT_RETURNTRANSFER => 1,
-  CURLOPT_URL => $queryUrl_company,
-  CURLOPT_POSTFIELDS => $queryData,
-));
+$queryData = http_build_query(array("ID" => $deal_ID));
 $curl_deal = curl_init();
 curl_setopt_array($curl_deal, array(
   CURLOPT_SSL_VERIFYPEER => 0,
@@ -118,6 +107,35 @@ curl_setopt_array($curl_deal, array(
   CURLOPT_URL => $queryUrl_deal,
   CURLOPT_POSTFIELDS => $queryData,
 ));
+$result_deal = curl_exec($curl_deal);
+curl_close($curl_deal);
+$result_deal = json_decode($result_deal, true);
+$deal_title = $result_deal["result"]["TITLE"];
+$company_ID = $result_deal["result"]["COMPANY_ID"];
+$contact_ID = $result_deal["result"]["CONTACT_ID"];
+//--------------------------------
+//read company ----------------
+$queryUrl_company = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.company.get.json';
+$queryData = http_build_query(array("ID" => $company_ID));
+$curl_company = curl_init();
+curl_setopt_array($curl_company, array(
+  CURLOPT_SSL_VERIFYPEER => 0,
+  CURLOPT_POST => 1,
+  CURLOPT_HEADER => 0,
+  CURLOPT_RETURNTRANSFER => 1,
+  CURLOPT_URL => $queryUrl_company,
+  CURLOPT_POSTFIELDS => $queryData,
+));
+$result_company = curl_exec($curl_company);
+curl_close($curl_company);
+$result_company = json_decode($result_company, true);
+$company_name = $result_company["result"]["TITLE"];
+$company_city = $result_company["result"]["UF_CRM_1581619509707"];
+$company_inn = $result_company["result"]["UF_CRM_1581620973525"];
+
+
+$queryUrl_contact = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.contact.get.json';
+$queryData = http_build_query(array("ID" => $contact_ID));
 $curl_contact = curl_init();
 curl_setopt_array($curl_contact, array(
   CURLOPT_SSL_VERIFYPEER => 0,
@@ -127,26 +145,16 @@ curl_setopt_array($curl_contact, array(
   CURLOPT_URL => $queryUrl_contact,
   CURLOPT_POSTFIELDS => $queryData,
 ));
-
-$result_company = curl_exec($curl_company);
-$result_deal = curl_exec($curl_deal);
 $result_contact = curl_exec($curl_contact);
-curl_close($curl_company);
-curl_close($curl_deal);
 curl_close($curl_contact);
-$result_company = json_decode($result_company, true);
-$result_deal = json_decode($result_deal, true);
 $result_contact = json_decode($result_contact, true);
-$company_name = $result_company["result"]["TITLE"];
-$company_city = $result_company["result"]["UF_CRM_1581619509707"];
-$company_inn = $result_company["result"]["UF_CRM_1581620973525"];
-$deal_title = $result_deal["result"]["TITLE"];
 $contact_person = "{$result_contact['result']['NAME']} {$result_contact['result']['SECOND_NAME']} {$result_contact['result']['LAST_NAME']}";
 $contact_position = $result_contact["result"]["POST"];
-$id_phone = $result_contact["result"]["PHONE"]["0"]["ID"];
+$deal_id_phone = $result_contact["result"]["PHONE"]["0"]["ID"];
 $contact_phone = $result_contact["result"]["PHONE"]["0"]["VALUE"];
-$id_email = $result_contact["result"]["EMAIL"]["0"]["ID"];
+$deal_id_email = $result_contact["result"]["EMAIL"]["0"]["ID"];
 $contact_email = $result_contact["result"]["EMAIL"]["0"]["VALUE"];
+
 ?>
 
 <body>
@@ -198,14 +206,14 @@ $contact_email = $result_contact["result"]["EMAIL"]["0"]["VALUE"];
         <div class="form-group row">
           <label for="phone" class="col-md-2 col-form-label">Телефон</label>
           <div class="col-sm-10">
-            <input type="hidden" class="form-control" id="phone" name="id_phone" value="<?= $id_phone; ?>">
+            <input type="hidden" class="form-control" id="phone" name="id_phone" value="<?= $deal_id_phone; ?>">
             <input type="text" class="form-control" id="phone" name="phone" value="<?= $contact_phone; ?>">
           </div>
         </div>
         <div class="form-group row">
           <label for="email" class="col-md-2 col-form-label">E-mail</label>
           <div class="col-sm-10">
-            <input type="hidden" class="form-control" id="phone" name="id_email" value="<?= $id_email; ?>">
+            <input type="hidden" class="form-control" id="phone" name="id_email" value="<?= $deal_id_email; ?>">
             <input type="text" class="form-control" id="email" name="email" value="<?= $contact_email; ?>">
           </div>
         </div>
