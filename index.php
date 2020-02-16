@@ -10,7 +10,7 @@
 </head>
 <?
 
-print ($_POST['PLACEMENT_OPTIONS']['ID']);
+print ($_POST['PLACEMENT_OPTIONS']->ID);
 
 // update hooks
 if (!empty($_POST['contactPerson'])) {
