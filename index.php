@@ -159,7 +159,7 @@ $contact_email = $result_contact["result"]["EMAIL"]["0"]["VALUE"];
 //-------------
 // read INN
 $queryUrl_requisite = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.requisite.list.json';
-$queryData = http_build_query(array("filter" => array("ENTITY_ID" => $_SESSION['deal_ID'] )));
+$queryData = http_build_query(array("filter" => array("ENTITY_ID" => $_SESSION['company_ID'] )));
 
 $curl_requisite = curl_init();
 curl_setopt_array($curl_requisite, array(
