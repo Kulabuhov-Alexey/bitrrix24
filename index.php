@@ -158,25 +158,25 @@ $deal_id_email = $result_contact["result"]["EMAIL"]["0"]["ID"];
 $contact_email = $result_contact["result"]["EMAIL"]["0"]["VALUE"];
 //-------------
 // read INN
-$queryUrl_inn = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.requisite.list.json';
+$queryUrl_requisite = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.requisite.list.json';
 $queryData = http_build_query(array("filter" => array("ENTITY_ID" => $_SESSION['deal_ID'] )));
 
-$curl_inn = curl_init();
+$curl_requisite = curl_init();
 curl_setopt_array($curl_company, array(
     CURLOPT_SSL_VERIFYPEER => 0,
     CURLOPT_POST => 1,
     CURLOPT_HEADER => 0,
     CURLOPT_RETURNTRANSFER => 1,
-    CURLOPT_URL => $queryUrl_inn,
+    CURLOPT_URL => $queryUrl_requisite,
     CURLOPT_POSTFIELDS => $queryData,
 ));
 
 
-$result_inn = curl_exec($curl_inn);
+$result_requisite = curl_exec($curl_requisite);
 
-curl_close($curl_company);
+curl_close($curl_requisite);
 
-$result = json_decode($result_inn, true);
+$result = json_decode($result_requisite, true);
 $company_inn = $result['result'][0]['RQ_INN'];
 ?>
 
