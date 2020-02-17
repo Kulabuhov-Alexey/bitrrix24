@@ -19,7 +19,38 @@ if (!empty($_POST['PLACEMENT_OPTIONS'])) {
 }
 // update hooks
 if (!empty($_POST['contactPerson'])) {
+  // update comment data
+  $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.livefeedmessage.add.json';
+  $queryData = http_build_query(array(
+    "fields" => array(
+      "POST_TITLE" => "Немного о сервисе",
+      "MESSAGE" => "Тест коммент",
+      "SPERM" => array(
+        "CRMCONTACT" => ["CRMCONTACT3", "CRMCONTACT7"],
+        "CRMCOMPANY" => ["CRMCOMPANY1", "CRMCOMPANY3"],
+        "CRMDEAL" => ["CRMDEAL3", "CRMDEAL5"],
+        "CRMLEAD" => ["CRMLEAD9", "CRMLEAD11"],
+        "SG" => ["SG5", "SG9"],
+        "U" => ["U1", "U3"],
+        "DR" => ["DR1", "DR7"],
+      ),
+      "ENTITYTYPEID" => 2,
+      "ENTITYID" => 2,
+    )
+  ));
 
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_SSL_VERIFYPEER => 0,
+    CURLOPT_POST => 1,
+    CURLOPT_HEADER => 0,
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLOPT_URL => $queryUrl,
+    CURLOPT_POSTFIELDS => $queryData,
+  ));
+
+  $result = curl_exec($curl);
+  curl_close($curl);
   // update deal data
   $queryUrl = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.deal.update.json';
   $queryData = http_build_query(array(
@@ -84,7 +115,7 @@ if (!empty($_POST['contactPerson'])) {
 
   // update inn
   $queryUrl_requisite = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.requisite.update.json';
-  $queryData = http_build_query(array("id" => $_SESSION['inn_id'],"fields" => array("RQ_INN" => $_POST['inn'])));
+  $queryData = http_build_query(array("id" => $_SESSION['inn_id'], "fields" => array("RQ_INN" => $_POST['inn'])));
 
   $curl = curl_init();
   curl_setopt_array($curl, array(
@@ -211,16 +242,16 @@ curl_close($curl_requisite);
 $requisite_list = json_decode($result_requisite, true);
 for ($i = 0; $i <= count($requisite_list); $i++) {
   if ($requisite_list['result'][$i]['RQ_INN'] == '') {
-      continue;
+    continue;
   } else {
-      $company_inn = $requisite_list['result'][$i]['RQ_INN'];
-      $_SESSION['inn_id'] = $requisite_list['result'][$i]['ID'];
+    $company_inn = $requisite_list['result'][$i]['RQ_INN'];
+    $_SESSION['inn_id'] = $requisite_list['result'][$i]['ID'];
   };
 };
 
 //read City----------
 $queryUrl_address = 'https://b24-pwelds.bitrix24.ru/rest/1/g89qnk5f5n02kqrf/crm.address.list.json';
-$queryData = http_build_query(array("filter" => array("ENTITY_TYPE_ID"=> 8,  'ENTITY_ID' => $_SESSION['inn_id'])));
+$queryData = http_build_query(array("filter" => array("ENTITY_TYPE_ID" => 8,  'ENTITY_ID' => $_SESSION['inn_id'])));
 
 $curl_address = curl_init();
 curl_setopt_array($curl_address, array(
