@@ -214,7 +214,7 @@ for ($i = 0; $i <= count($requisite_list); $i++) {
       continue;
   } else {
       $company_inn = $requisite_list['result'][$i]['RQ_INN'];
-      $_SESSION['result']['inn_id'] = $requisite_list[$i]['ID'];
+      $_SESSION['inn_id'] = $requisite_list['result'][$i]['ID'];
   };
 };
 
