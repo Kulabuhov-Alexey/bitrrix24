@@ -35,7 +35,7 @@ if (!empty($_POST['contactPerson'])) {
         "DR" => ["DR1", "DR7"],
       ),
       "ENTITYTYPEID" => 2,
-      "ENTITYID" => $_SESSION['deal_id'],
+      "ENTITYID" => $_SESSION['deal_ID'],
     )
   ));
 
