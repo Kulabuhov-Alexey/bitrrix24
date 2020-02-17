@@ -210,11 +210,11 @@ curl_close($curl_requisite);
 
 $requisite_list = json_decode($result_requisite, true);
 for ($i = 0; $i <= count($requisite_list); $i++) {
-  if ($requisite_list[$i]['RQ_INN'] == '') {
+  if ($requisite_list['result'][$i]['RQ_INN'] == '') {
       continue;
   } else {
-      $company_inn = $requisite_list[$i]['RQ_INN'];
-      $_SESSION['inn_id'] = $requisite_list[$i]['ID'];
+      $company_inn = $requisite_list['result'][$i]['RQ_INN'];
+      $_SESSION['result']['inn_id'] = $requisite_list[$i]['ID'];
   };
 };
 
