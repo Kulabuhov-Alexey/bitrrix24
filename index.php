@@ -76,7 +76,7 @@ if (!empty($_POST['contactPerson'])) {
     CURLOPT_POST => 1,
     CURLOPT_HEADER => 0,
     CURLOPT_RETURNTRANSFER => 1,
-    CURLOPT_URL => $queryUrl,
+    CURLOPT_URL => $queryUrl_company,
     CURLOPT_POSTFIELDS => $queryData,
   ));
   $result = curl_exec($curl);
@@ -92,7 +92,7 @@ if (!empty($_POST['contactPerson'])) {
     CURLOPT_POST => 1,
     CURLOPT_HEADER => 0,
     CURLOPT_RETURNTRANSFER => 1,
-    CURLOPT_URL => $queryUrl,
+    CURLOPT_URL => $queryUrl_requisite,
     CURLOPT_POSTFIELDS => $queryData,
   ));
 
