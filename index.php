@@ -24,7 +24,7 @@ if (!empty($_POST['contactPerson'])) {
   $queryData = http_build_query(array(
     "fields" => array(
       "POST_TITLE" => "Немного о сервисе",
-      "MESSAGE" => "Тест коммент",
+      "MESSAGE" => $_POST['comments'],
       "SPERM" => array(
         "CRMCONTACT" => ["CRMCONTACT3", "CRMCONTACT7"],
         "CRMCOMPANY" => ["CRMCOMPANY1", "CRMCOMPANY3"],
@@ -35,7 +35,7 @@ if (!empty($_POST['contactPerson'])) {
         "DR" => ["DR1", "DR7"],
       ),
       "ENTITYTYPEID" => 2,
-      "ENTITYID" => 2,
+      "ENTITYID" => $_SESSION['deal_id'],
     )
   ));
 
