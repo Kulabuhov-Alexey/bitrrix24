@@ -236,7 +236,7 @@ curl_setopt_array($curl_address, array(
 $result_address = curl_exec($curl_address);
 
 
-curl_close($curl_company);
+curl_close($curl_address);
 
 $result = json_decode($result_address, true);
 $company_city = $result['result'][0]['CITY'];
